@@ -15,7 +15,7 @@ const addForm = document.forms['add-book']
 
 addForm.addEventListener('submit', e => {
   e.preventDefault()
-  const val = addForm.querySelector('input').value
+  const value = addForm.querySelector('input[type="text"]').value
 
   // create elements
   const li = document.createElement('li')
@@ -24,7 +24,7 @@ addForm.addEventListener('submit', e => {
 
   // add content
   deleteBtn.textContent = 'delete'
-  bookName.textContent = val
+  bookName.textContent = value
 
   // add classes
   deleteBtn.classList.add('delete')
@@ -43,5 +43,74 @@ hideBox.addEventListener('change', e => {
     list.style.display = 'none'
   } else {
     list.style.display = 'block'
+  }
+})
+
+const searchBar = document.forms['search-books'].querySelector(
+  'input'
+)
+
+searchBar.addEventListener('keyup', e => {
+  const term = e.target.value.toLowerCase()
+  const books = list.getElementsByTagName('li')
+
+  Array.from(books).forEach(book => {
+    const title = book.firstElementChild.textContent
+    if (title.toLowerCase().indexOf(term) !== -1) {
+      book.style.display = 'block'
+    } else {
+      book.style.display = 'none'
+    }
+  })
+})
+
+//tabbed content
+
+const tabs = document.querySelector('.tabs')
+/*
+single Element
+<ul class="tabs">
+          <li data-target="#about" class="active">About</li>
+          <li data-target="#contact">Contact</li>
+        </ul>
+*/
+const panels = document.querySelectorAll('.panel')
+/*
+NodeList
+<div class="panel active" id="about">
+          <p>Content for about tab...</p>
+          <p>
+            Lorem ipsum ...
+          </p>
+        </div>
+        <div class="panel" id="contact">
+          <p>Content for contact tab...</p>
+          <p>
+            Lorem ipsum ...
+          </p>
+        </div>
+*/
+
+//console.log(panels)
+tabs.addEventListener('click', e => {
+  if (e.target.tagName === 'LI') {
+    const targetPanel = document.querySelector(
+      e.target.dataset.target
+    )
+
+    Array.from(tabs.children).forEach(c =>
+      c.classList.remove('active')
+    )
+    e.target.classList.add('active')
+
+    //console.log(targetPanel)
+    panels.forEach(panel => {
+      //console.log(panel)
+      if (panel === targetPanel) {
+        panel.classList.add('active')
+      } else {
+        panel.classList.remove('active')
+      }
+    })
   }
 })
